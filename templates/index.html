@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Climate Change Data Visualizations</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #222;
+            color: #eee;
+        }
+        .container {
+            background-color: #333;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            margin-top: 20px;
+        }
+        h1, h2 {
+            color: #fff;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .card-text {
+            font-size: 14px;
+        }
+        .img-fluid {
+            border-radius: 5px;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background-color: #282c34;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100%;
+            padding: 20px;
+            transition: left 0.3s ease;
+        }
+        .sidebar-title {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 25px;
+        }
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+        }
+        .sidebar-nav li {
+            margin-bottom: 10px;
+        }
+        .sidebar-nav a {
+            color: #eee;
+            text-decoration: none;
+            padding: 10px;
+            display: block;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .sidebar-nav a:hover {
+            background-color: #333;
+        }
+
+        /* Main Content Area Styles */
+        .main-content {
+            padding: 20px;
+            margin-left: 250px; /* Adjust margin for sidebar width */
+            transition: margin-left 0.3s ease;
+        }
+
+        /* Card Styles */
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+            /* Added darker background color */
+            background-color: #444;
+        }
+        .card-header {
+            /* Removed background-color as the card has it now */
+            color: #eee;
+            padding: 15px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+        .card-body {
+            padding: 15px;
+            color: #eee;  /* Added white text color */
+        }
+
+        /* Mobile View Adjustments */
+        @media (max-width: 768px) {
+            /* Hide sidebar on mobile */
+            .sidebar {
+                left: -250px;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+
+            /* Mobile Menu Toggle Button */
+            .sidebar-toggle {
+                position: fixed;
+                top: 10px;
+                left: 10px;
+                background-color: #333;
+                color: #eee;
+                padding: 10px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+            /* Show sidebar on mobile when open */
+            .sidebar.open {
+                left: 0;
+            }
+            .main-content.open {
+                margin-left: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2 class="sidebar-title">AI Climate Monitor</h2>
+        <ul class="sidebar-nav">
+            <li><a href="/co2_absorption_air_sea">Global Ocean Carbon Absorption</a></li>
+            <li><a href="/co2_emissions_mip">Global Annual CO₂ Emissions</a></li>
+            <li><a href="/co2_emissions_odiac">Global CO₂ Emissions</a></li>
+            <li><a href="/methane_emissions_tm5">Global Methane Emissions</a></li>
+            <li><a href="/methane_concentrations_emit">Global Arid Regions High Methane Concentrations</a></li>
+            <li><a href="/prediction">AI Climate Predictions</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+        <div class="container">
+            <h1 class="text-center mb-4">Climate Change Data Visualizations</h1>
+            <p class="text-center">Explore interactive maps and graphs to understand climate change data.</p>
+            <h2 class="text-center mb-2">Uncover the Role of Greenhouse Gases in Your Neighborhood!</h2>
+
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header"><a href="/co2_absorption_air_sea">Global Ocean Carbon Absorption</a></div>
+                        <div class="card-body">
+                            <img src="https://storage.googleapis.com/kagglesdsdata/datasets/5823247/9556745/CO2_by_Nature.png?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=databundle-worker-v2%40kaggle-161607.iam.gserviceaccount.com%2F20241006%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20241006T011604Z&X-Goog-Expires=345600&X-Goog-SignedHeaders=host&X-Goog-Signature=23124bbf6da3db5a3b3e83d9054d46c7acc7a463ee48d670132d4118f6bd106606320937b0a99e390409a743649d695ae6ca66539c58ecb4b9ae28d7950c985e89e26a38e99447d077ebe86b187467321c42b7e6e35d564e074fa6daea3ea6890b842433000e71592668ebc84059910379c16827ace85824e557e9351203b1f96906d91cf78d77fbc3ab83b07c32c010d0b102a2a083954e57840522f607fcbf486abac74196f7ea56aa97681d99dae33a04aa6d3c2bf3d52284e99f11680c1d14062c3d81f4d759c3391d58e8db5c6bf7e44ad89ebbf5a012fac1b12ba551a261b4577037ea53766066c02a006adf6faacc70c235673e4c2b8fc67587976edf" alt="Global Ocean Carbon Absorption" class="img-fluid mt-2">
+                            <p class="card-text">
+                                <p>• Monthly average air-sea CO₂ flux data.</p>
+                                <p>• Shows how the ocean absorbs carbon.</p>
+                                <p>• Data from 2020 to 2022.</p>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header"><a href="/co2_emissions_mip">Global Annual CO₂ Emissions</a></div>
+                        <div class="card-body">
+                            <img src="https://storage.googleapis.com/kagglesdsdata/datasets/5823247/9556745/CO2_Global_Annual_by_Human.png?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=databundle-worker-v2%40kaggle-161607.iam.gserviceaccount.com%2F20241006%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20241006T011827Z&X-Goog-Expires=345600&X-Goog-SignedHeaders=host&X-Goog-Signature=3589a21c414d1e639bc8986f971c0359e8a9b55d81569638c7879674096a793ef15eab26a8c069094625c78679e93d6d004ddd6ccd1bbedc6d82554ddba8b98c7c2cf6dfee10c276172ffe4887c9e7627077adeed9d2fdedc7ddb84a0e1d7f1777efaf5803666086bb6d344c4aa8256676d3d4c41fafa84a24dcd3cbfc4f2a3d58e649ed24e3299166846f10db4a643f3183fa0335a6b33294d064bff195f159d1b635f56c2c6cfc77f68b0905a39b5464b024e13260057c40aac083417dd98f2d600c480bad58972ce3a5b35a0f564ab89fa39a8c5aff06bd858d30d66ea166ce072b597f0082eb5633ef86891e9590db1fe7680adcd7b6b630ce3eda8f33d5" alt="Global Annual CO₂ Emissions" class="img-fluid mt-2">
+                            <p class="card-text">
+                                <p>• Annual CO₂ emissions and removals from 2015 to 2020.</p>
+                                <p>• Global grid data including fossil fuel emissions and natural exchanges.</p>
+                                <p>• Visualize trends and patterns.</p>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header"><a href="/co2_emissions_odiac">Global CO₂ Emissions</a></div>
+                        <div class="card-body">
+                            <img src="https://storage.googleapis.com/kagglesdsdata/datasets/5823247/9556745/CO2_Global_by%20Human.png?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=databundle-worker-v2%40kaggle-161607.iam.gserviceaccount.com%2F20241006%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20241006T011744Z&X-Goog-Expires=345600&X-Goog-SignedHeaders=host&X-Goog-Signature=8c039d6e2e1eef3479ec670f61eb5efd38c1255693e6725bf0738f2fc2d29cc45e849799a074a6396b79217dccc26cab18f6b1ed29d4587cb7448ba0e56c7ab7eebd2d85256122e5d179679970e5ac47909878554c16d4bf8501ff302a16e14620f13428c6c5f5d214c26bb83dd5fa19bd72da41541725b8cf0d21f9e3dad6ce1a7e97f052c011e87822939e64d2fd460ffb86866a0ac56f11312de7bc7d31a6442d8e3f0e0371b2cfb05467bfd605754e9138bf2bce1eaad660a28e8a835e0ffe306250d3ccc4a28ad8bbb428b4d5fe4ed7ed57f5da2d9200dd7bd28acf3ff97f4af82bd5ad1d58182b4d7a68d4ab37921eb6499a9a3dc30e21eaacdc50a84c" alt="Global CO₂ Emissions" class="img-fluid mt-2">
+                            <p class="card-text">
+                                <p>• Monthly 1 km resolution data of fossil fuel CO₂ emissions.</p>
+                                <p>• Data from 2022, showing global patterns.</p>
+                                <p>• Explore human-caused emissions.</p>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header"><a href="/methane_emissions_tm5">Global Methane Emissions</a></div>
+                        <div class="card-body">
+                            <img src="https://storage.googleapis.com/kagglesdsdata/datasets/5823247/9556745/Global_Methane_Emissions.png?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=databundle-worker-v2%40kaggle-161607.iam.gserviceaccount.com%2F20241006%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20241006T011859Z&X-Goog-Expires=345600&X-Goog-SignedHeaders=host&X-Goog-Signature=7b6b296fc837040b829e5b25941203f28692cb0e37945a9008d6e84bc07348e6dbf904c09d567986324e2ec8cddb5a73e0db5f6cff9b80a6623dfeec9577532c9c63198218e526deb2aad5934123d3ab754370626c9c0268aefcc7ff62418703e6b0aa0fbf00b170464ee30d41dc8516111822ad92ca38faf649ce7e0bf2e7da9907c5d62a3d240166989c35711f5e82a0b997c34d8c0b5918d0037109a4618a0f75dc68289fbd41e6604d50413e842ee8ade0095805f30f196e4efcb48163d9136e7eb016aa304c7ab35d38a1b4ac98e268e9c96a2e2694e87b436619279417875381b3a5f37075f10297fd40ae084b6ce4b9562eb5c9513163b20451baed59" alt="Global Methane Emissions" class="img-fluid mt-2">
+                            <p class="card-text">
+                                <p>• Monthly methane emissions from various sources.</p>
+                                <p>• Includes microbial, fossil, and pyrogenic emissions.</p>
+                                <p>• Explore natural and human-caused sources.</p>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header"><a href="/methane_concentrations_emit">Global Arid Regions High Methane Concentrations</a></div>
+                        <div class="card-body">
+                            <img src="https://storage.googleapis.com/kagglesdsdata/datasets/5823247/9556745/CH4_Large_Emission.png?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=databundle-worker-v2%40kaggle-161607.iam.gserviceaccount.com%2F20241006%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20241006T011921Z&X-Goog-Expires=345600&X-Goog-SignedHeaders=host&X-Goog-Signature=40b5e6fa2b4b86a78d9e7606ddb45af2460f9bc66e654762f69cae7ccf7849952f8862447dea49df6cdb81e9bd8f42d49c2b6a4bea8960a1d85f347632047fda15c8e63270d5d7ef4515d86479a086c38b008024237864b4639d43f25a54be466b216f72e85fc53aca1e688d05a7b3f1d0252d7fd70364c1b2e0b4a257a2772637f57c60d9d6da6425ae4b73d51e139d9a025d50aa6e7e47b6e59449c8c7d96ae000de35aa5f66c02903955d5a77e22653b26418e6051c3c5aa15ac179702f19d8b72a54775a2d1c3e03485c92a7eb8bf659689633ce19e7712b3ffe6bf5a4fdbd181a84ad14b195094e0b4b2e8b6689932497e654fd27867a4dc9665b865cfe" alt="Global Arid Regions High Methane Concentrations" class="img-fluid mt-2">
+                            <p class="card-text">
+                                <p>• EMIT data showing methane point source plume complexes.</p>
+                                <p>• Measured by the International Space Station.</p>
+                                <p>• Explore areas of high methane concentration.</p>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header"><a href="/prediction">AI Climate Predictions</a></div>
+                        <div class="card-body">
+                            <img src="https://storage.googleapis.com/kagglesdsdata/datasets/5823247/9556745/co2_human_chart.png?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=databundle-worker-v2%40kaggle-161607.iam.gserviceaccount.com%2F20241006%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20241006T011947Z&X-Goog-Expires=345600&X-Goog-SignedHeaders=host&X-Goog-Signature=10c0e3d90f65458a8fe95ea5d6d30f95364e433ab1f5198293fb28c4627a08b55668708c5e62db23a3ec2071c29d607e88f10c977282ad9d895f3e8ca08316e9565cc5e18a9c5134021b0d76fd07a6be546bbc170d799cd40c03f8cd07656dfcfcd02f2fcc7c3ce04ba988bac97cd2835c448da3be367747188fd3931912f8ec8d436c166dcdc15786256a7b594d98831ead368b82e6078a9562ed9b1b89e96b89cecdb661c0d946750caa0204365a176e8395024186738c9915b449c219c8a62e4aedfa5f5f3482608a95a88a13169c06c8515a4da0f0447a7d98eada7dab0484f9200b91d674f61aa6ee330a1199a3552ffa58a5595ea1ac4e29169e68d91b" alt="Climate Change Predictions" class="img-fluid mt-2">
+                            <p class="card-text">
+                                <p>• Explore projected climate change scenarios.</p>
+                                <p>• Includes temperature increases, sea level rise, and ecosystem impacts.</p>
+                                <p>• Understand potential future effects.</p>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('.main-content');
+            sidebar.classList.toggle('open');
+            mainContent.classList.toggle('open');
+        }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <p class="text-center">Created by Mirza Milan Farabi | 2024</p>
+</body>
+</html>

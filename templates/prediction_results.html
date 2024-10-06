@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prediction Results</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #222;
+      color: #eee;
+      margin: 0;
+      padding: 0;
+      overflow-y: auto; 
+    }
+
+    .container {
+      background-color: #333;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+      margin-top: 20px;
+    }
+
+    h1, h2 {
+      color: #fff;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      border: none;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+
+    .card-text {
+      font-size: 14px;
+    }
+
+    .img-fluid {
+      border-radius: 5px;
+    }
+
+    /* Sidebar Styles */
+    .sidebar {
+      background-color: #282c34;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 250px;
+      height: 100%;
+      padding: 20px;
+      transition: left 0.3s ease;
+    }
+    .sidebar-title {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 25px;
+    }
+    .sidebar-nav {
+      list-style: none;
+      padding: 0;
+    }
+    .sidebar-nav li {
+      margin-bottom: 10px;
+    }
+    .sidebar-nav a {
+      color: #eee;
+      text-decoration: none;
+      padding: 10px;
+      display: block;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+    .sidebar-nav a:hover {
+      background-color: #333;
+    }
+
+    /* Main Content Area Styles */
+    .main-content {
+      padding: 20px;
+      margin-left: 250px; 
+      transition: margin-left 0.3s ease;
+      overflow-y: auto; 
+    }
+
+    /* Card Styles */
+    .card {
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+      margin-bottom: 20px;
+      background-color: #444;
+    }
+    .card-header {
+      color: #eee;
+      padding: 15px;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+    .card-body {
+      padding: 15px;
+      color: #eee; 
+    }
+
+    /* Mobile View Adjustments */
+    @media (max-width: 768px) {
+      .sidebar {
+        left: -250px;
+      }
+      .main-content {
+        margin-left: 0;
+      }
+
+      .sidebar-toggle {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        background-color: #333;
+        color: #eee;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .sidebar.open {
+        left: 0;
+      }
+      .main-content.open {
+        margin-left: 250px;
+      }
+    }
+
+    /* Form styles */
+    .form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group label {
+      margin-bottom: 5px;
+    }
+
+    .form-group input {
+      padding: 10px;
+      border: 1px solid #555;
+      border-radius: 4px;
+      background-color: #444;
+      color: #fff;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #45a049;
+    }
+
+    /* Footer styles */
+    .footer {
+      background-color: #333;
+      padding: 20px;
+      text-align: center;
+      position: relative; 
+      bottom: 0;
+      width: 100%;
+    }
+
+    /* Prediction Results Styles */
+    .prediction-section {
+      margin-bottom: 30px;
+      background-color: #444;
+      border-radius: 8px;
+      padding: 20px;
+    }
+
+    .prediction-section h2 {
+      color: #eee;
+    }
+
+    .prediction-section img {
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 15px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    pre {
+      background-color: #444;
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      color: #eee; /* Set predicted text color to white */
+    }
+
+    /* Style for bold text in pre elements */
+    pre strong {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <h2 class="sidebar-title">AI Climate Monitor</h2>
+    <ul class="sidebar-nav">
+      <li><a href="/co2_absorption_air_sea">Global Ocean Carbon Absorption</a></li>
+      <li><a href="/co2_emissions_mip">Global Annual CO₂ Emissions</a></li>
+      <li><a href="/co2_emissions_odiac">Global CO₂ Emissions</a></li>
+      <li><a href="/methane_emissions_tm5">Global Methane Emissions</a></li>
+      <li><a href="/methane_concentrations_emit">Global Arid Regions High Methane Concentrations</a></li>
+      <li><a href="/prediction">AI Climate Predictions</a></li>
+    </ul>
+  </div>
+
+  <div class="main-content">
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+    <div class="container mt-5">
+      <h1 class="text-center mb-4">Prediction Results</h1>
+
+      <div class="prediction-section">
+        <h2>CO2 Emissions (Human):</h2>
+        <div style="text-align: center;"> <img src="data:image/png;base64,{{ co2_human_chart }}" alt="CO2 (Human) Chart"></div>
+        <pre id="co2_human_predictions">{{ co2_human_predictions }}</pre>
+      </div>
+
+      <div class="prediction-section">
+        <h2>CO2 Emissions (Natural):</h2>
+        <div style="text-align: center;"> <img src="data:image/png;base64,{{ co2_natural_chart }}" alt="CO2 (Natural) Chart"></div>
+        <pre id="co2_natural_predictions">{{ co2_natural_predictions }}</pre>
+      </div>
+
+      <div class="prediction-section">
+        <h2>CH4 Emissions:</h2>
+        <div style="text-align: center;"> <img src="data:image/png;base64,{{ ch4_chart }}" alt="CH4 Chart"></div>
+        <pre id="ch4_predictions">{{ ch4_predictions }}</pre>
+      </div>
+
+    </div>
+
+    <footer class="footer">
+      <p class="text-light">Created by Mirza Milan Farabi | 2024</p>
+    </footer>
+
+    <script>
+      function toggleSidebar() {
+        const sidebar = document.querySelector('.sidebar');
+        const mainContent = document.querySelector('.main-content');
+        sidebar.classList.toggle('open');
+        mainContent.classList.toggle('open');
+      }
+
+      // Function to make text bold and increase font size
+      function makeTextBold(elementId) {
+        var preElement = document.getElementById(elementId);
+        var text = preElement.textContent; 
+
+        // Replace ** with strong tags for bold text
+        var boldText = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+
+        // Update the text content of the pre element
+        preElement.innerHTML = boldText;
+
+        // Increase font size
+        preElement.style.fontSize = '14px';
+      }
+
+      // Call the function for each prediction section
+      makeTextBold('co2_human_predictions');
+      makeTextBold('co2_natural_predictions');
+      makeTextBold('ch4_predictions');
+    </script>
+
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

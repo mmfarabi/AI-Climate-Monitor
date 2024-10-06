@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Methane Plume Map</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqk1wZxL+h701RMgrb84TskIVwVfAmqpv31B+M+A/VzeM3rJxwH6WuLCzG/TeG/m+wCm7o4+zNA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap4.min.css">
+  {{ map|safe }} 
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap4.min.js"></script>
+  <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #222;
+            color: #eee;
+        }
+        .container {
+            background-color: #333;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            margin-top: 20px;
+        }
+        h1, h2 {
+            color: #fff;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .card-text {
+            font-size: 14px;
+        }
+        .img-fluid {
+            border-radius: 5px;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background-color: #282c34;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100%;
+            padding: 20px;
+            transition: left 0.3s ease;
+        }
+        .sidebar-title {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 25px;
+        }
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+        }
+        .sidebar-nav li {
+            margin-bottom: 10px;
+        }
+        .sidebar-nav a {
+            color: #eee;
+            text-decoration: none;
+            padding: 10px;
+            display: block;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .sidebar-nav a:hover {
+            background-color: #333;
+        }
+
+        /* Main Content Area Styles */
+        .main-content {
+            padding: 20px;
+            margin-left: 250px; /* Adjust margin for sidebar width */
+            transition: margin-left 0.3s ease;
+        }
+
+        /* Card Styles */
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+            /* Added darker background color */
+            background-color: #444;
+        }
+        .card-header {
+            /* Removed background-color as the card has it now */
+            color: #eee;
+            padding: 15px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+        .card-body {
+            padding: 15px;
+            color: #eee;  /* Added white text color */
+        }
+
+        /* Mobile View Adjustments */
+        @media (max-width: 768px) {
+            /* Hide sidebar on mobile */
+            .sidebar {
+                left: -250px;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+
+            /* Mobile Menu Toggle Button */
+            .sidebar-toggle {
+                position: fixed;
+                top: 10px;
+                left: 10px;
+                background-color: #333;
+                color: #eee;
+                padding: 10px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+            /* Show sidebar on mobile when open */
+            .sidebar.open {
+                left: 0;
+            }
+            .main-content.open {
+                margin-left: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+  <div class="sidebar">
+        <h2 class="sidebar-title">AI Climate Monitor</h2>
+        <ul class="sidebar-nav">
+            <li><a href="/co2_absorption_air_sea">Global Ocean Carbon Absorption</a></li>
+            <li><a href="/co2_emissions_mip">Global Annual CO₂ Emissions</a></li>
+            <li><a href="/co2_emissions_odiac">Global CO₂ Emissions</a></li>
+            <li><a href="/methane_emissions_tm5">Global Methane Emissions</a></li>
+            <li><a href="/methane_concentrations_emit">Global Arid Regions High Methane Concentrations</a></li>
+            <li><a href="/prediction">AI Climate Predictions</a></li>
+        </ul>
+    </div>
+  <div class="main-content">
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+    <div class="container mt-4">
+      <h1 class="text-center mb-4">Methane Plume Visualization</h1>
+      <p class="text-center">This data helps us understand how large methane emissions, like those from point sources, contribute to climate change.</p>
+      <div class="row">
+        <div class="col-md-4">
+          <form method="POST">
+            <div class="form-group">
+              <label for="item_id">Methane Emission Plume Estimates ID</label>
+              <select class="form-control" id="item_id" name="item_id">
+                {% for id in plume_complexes %}
+                  <option value="{{ id }}" {% if id == item_id %} selected {% endif %}>{{ id }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+          </form>
+        </div>
+        <div class="col-md-8">
+          <div id="map" style="height: 400px;">{{ map|safe }}</div> 
+        </div>
+      </div>
+
+      <div class="row mt-4">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title">Methane Emission Plume Estimates Table</h5>
+            </div>
+            <div class="card-body" style="height: 300px; overflow-y: auto;"> 
+              <table id="dataTable" class="table table-striped table-bordered" style="width:100%">
+                <thead>
+                  <tr>
+                    {% for header in headers %}
+                      <th>{{ header }}</th>
+                    {% endfor %}
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for row in table_data %}
+                    <tr>
+                      {% for cell in row %}
+                        <td>{{ cell }}</td>
+                      {% endfor %}
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-4">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title">Methane Emission Plume Estimates over Time</h5>
+            </div>
+            <div class="card-body">
+              <div id="chart" style="height: 400px;">{{ chart_html|safe }}</div> <script>
+                // This is needed to render the chart inside the template
+                Plotly.newPlot('chart', {{ chart_html|safe }});
+              </script> 
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <footer class="footer mt-5 py-3 bg-dark">
+      <div class="container">
+        <p class="text-center text-light">Created by Mirza Milan Farabi | 2024</p>
+      </div>
+    </footer>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('.main-content');
+            sidebar.classList.toggle('open');
+            mainContent.classList.toggle('open');
+        }
+    </script>
+  </div>
+  <script>
+    $(document).ready(function() {
+      $('#dataTable').DataTable({
+        "paging": true,  
+        "lengthMenu": [5, 10, 25, 50, 100],
+        "scrollX": true,
+        "scrollY": "300px",
+        "scrollCollapse": true
+      });
+    });
+  </script>
+</body>
+</html>
