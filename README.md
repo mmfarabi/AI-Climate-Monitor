@@ -28,7 +28,7 @@
      ```
 
 3. **Install Google Generative AI:**
-    - Follow the instructions on the Google Generative AI website to install the necessary libraries: [Gemini API quickstart]([https://cloud.google.com/generative-ai](https://ai.google.dev/gemini-api/docs/quickstart?lang=python))
+    - Follow the instructions on the Google Generative AI website to install the necessary libraries: [https://ai.google.dev/gemini-api/docs/quickstart?lang=python]([https://cloud.google.com/generative-ai](https://ai.google.dev/gemini-api/docs/quickstart?lang=python))
     - Make sure to install the `google-generativeai` library.
 
 4. **Obtain Google API Key:**
