@@ -1,0 +1,10 @@
+flask
+requests
+folium
+pandas
+matplotlib
+plotly
+google-generativeai
+branca
+tabulate
+dotenv
